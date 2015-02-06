@@ -9,7 +9,8 @@ class GameState extends State {
     CursorKeys cursors;
     Tilemap map;
     List<TilemapLayer> layers = [];
-    Sprite image;
+    Sprite player;
+    Animation anim;
 
     void preload() {
         this.game.load.image("tiles", "assets/tilesets/rpg.png");
@@ -17,10 +18,14 @@ class GameState extends State {
                                "assets/tilemaps/Map.json",
                                null,
                                Tilemap.TILED_JSON);
-        this.game.load.image("player", "assets/sprites/car.png");
+        this.game.load.spritesheet("player",
+                                   "assets/spritesheets/lucas.png",
+                                   40, 40,
+                                   40);
     }
 
     void create() {
+        this.game.stage.smoothed = false;
         this.scale.scaleMode = ScaleManager.SHOW_ALL;
 
         this.map = this.game.add.tilemap("level1");
@@ -29,31 +34,34 @@ class GameState extends State {
             this.layers.add(this.map.createLayer(i));
             this.layers[i].resizeWorld();
         }
-        //this.layers.last.alpha = 0.5;
-        this.map.setCollisionBetween(1, 100000, true, "Blocked");
-        this.image = game.add.sprite(300, 200, "player");
-        this.image.scale.set(3, 3);
+        this.layers.last.alpha = 0.5;
+        this.map.setCollisionBetween(1, 2000, true, "Blocked");
+
+        this.player = game.add.sprite(300, 200, "player");
+        this.player.scale.set(3, 3);
+        this.anim = this.player.animations.add("walk");
+        this.anim.play(10, true);
 
         this.game.physics.startSystem(Physics.ARCADE);
-        this.game.physics.enable(this.image, Physics.ARCADE);
-        this.game.physics.arcade.collide(this.image, this.layers.last);
+        this.game.physics.enable(this.player, Physics.ARCADE);
 
-        this.game.camera.follow(this.image);
+        this.game.camera.follow(this.player);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
     }
 
     void update() {
-        this.image.body.velocity.set(0, 0);
+        this.player.body.velocity.set(0, 0);
         if (this.cursors.up.isDown) {
-            this.image.body.velocity.y = -150;
+            this.player.body.velocity.y = -150;
         } else if (this.cursors.down.isDown) {
-            this.image.body.velocity.y = 150;
+            this.player.body.velocity.y = 150;
         }
         if (this.cursors.left.isDown) {
-            this.image.body.velocity.x = -150;
+            this.player.body.velocity.x = -150;
         } else if (this.cursors.right.isDown) {
-            this.image.body.velocity.x = 150;
+            this.player.body.velocity.x = 150;
         }
+        this.game.physics.arcade.collide(this.player, this.layers.last);
     }
 }
