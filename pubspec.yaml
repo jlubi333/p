@@ -1,0 +1,6 @@
+name: p
+description: p
+author: Justin P. Lubin
+dependencies:
+    browser: any
+    play_phaser: any
