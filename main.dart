@@ -20,13 +20,15 @@ class GameState extends State {
                                Tilemap.TILED_JSON);
         this.game.load.spritesheet("player",
                                    "assets/spritesheets/lucas.png",
-                                   40, 40,
-                                   40);
+                                   17, 25,
+                                   4, 0, 4);
     }
 
     void create() {
-        this.game.stage.smoothed = false;
-        this.scale.scaleMode = ScaleManager.SHOW_ALL;
+        this.game.scale.pageAlignHorizontally = true;
+        this.game.scale.pageAlignVertically = true;
+        this.game.scale.scaleMode = ScaleManager.SHOW_ALL;
+        this.game.scale.setScreenSize();
 
         this.map = this.game.add.tilemap("level1");
         this.map.addTilesetImage("tiles", "tiles");
@@ -34,13 +36,13 @@ class GameState extends State {
             this.layers.add(this.map.createLayer(i));
             this.layers[i].resizeWorld();
         }
-        this.layers.last.alpha = 0.5;
+        this.layers.last.alpha = 0;
         this.map.setCollisionBetween(1, 2000, true, "Blocked");
 
-        this.player = game.add.sprite(300, 200, "player");
-        this.player.scale.set(3, 3);
+        this.player = game.add.sprite(128, 256, "player");
+        this.player.scale.set(4, 4);
         this.anim = this.player.animations.add("walk");
-        this.anim.play(10, true);
+        this.anim.play(5, true);
 
         this.game.physics.startSystem(Physics.ARCADE);
         this.game.physics.enable(this.player, Physics.ARCADE);
