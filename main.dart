@@ -62,7 +62,7 @@ class Player extends Entity {
 
 class GameState extends State {
     CursorKeys cursors;
-    Tilemap map;
+    Tilemap tilemap;
     List<TilemapLayer> layers = [];
     Player player;
     
@@ -87,16 +87,19 @@ class GameState extends State {
 
         this.game.physics.startSystem(Physics.ARCADE);
 
-        this.map = this.game.add.tilemap("level1");
-        this.map.addTilesetImage("tiles", "tiles");
-        for (int i = 0; i < this.map.layers.length; i++) {
-            this.layers.add(this.map.createLayer(i));
+        this.tilemap = this.game.add.tilemap("level1");
+        this.tilemap.addTilesetImage("tiles", "tiles");
+        for (int i = 0; i < this.tilemap.layers.length; i++) {
+            this.layers.add(this.tilemap.createLayer(i));
             this.layers[i].resizeWorld();
         }
         this.layers.last.alpha = 0;
-        this.map.setCollisionBetween(1, 2000, true, "Blocked");
+        this.tilemap.setCollisionBetween(1, 2000, true, "Blocked");
 
-        this.player = new Player(this.game, new Point(128, 256), Direction.UP);
+        this.player = new Player(this.game,
+                                 new Point(128, 256),
+                                 Direction.DOWN);
+        this.player.sprite.scale.set(4, 4);
         this.game.camera.follow(this.player.sprite);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
